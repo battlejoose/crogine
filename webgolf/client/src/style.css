@@ -1,0 +1,380 @@
+:root {
+  --bg-deep: #0c1410;
+  --fairway: #2f6b3a;
+  --sand: #c4a574;
+  --water: #1a4a5c;
+  --ink: #f2efe6;
+  --muted: rgba(242, 239, 230, 0.72);
+  --accent: #e8c468;
+  --danger: #ff6b4a;
+  --panel: rgba(8, 16, 12, 0.72);
+  --line: rgba(242, 239, 230, 0.14);
+  --display: 'Bebas Neue', Impact, sans-serif;
+  --body: 'DM Sans', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-family: var(--body);
+}
+
+#game-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+#overlay .panel,
+#overlay button,
+#overlay input {
+  pointer-events: auto;
+}
+
+.lobby {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(70, 120, 80, 0.35), transparent 60%),
+    linear-gradient(180deg, #1a2a20 0%, #0c1410 55%, #08100c 100%);
+}
+
+.lobby-card {
+  width: min(440px, calc(100vw - 32px));
+  padding: 36px 32px 28px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  text-align: center;
+}
+
+.brand {
+  font-family: var(--display);
+  font-size: clamp(3.5rem, 10vw, 5.5rem);
+  letter-spacing: 0.04em;
+  line-height: 0.9;
+  margin: 0 0 8px;
+  color: var(--ink);
+}
+
+.tagline {
+  margin: 0 0 28px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.field label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.field input {
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--ink);
+  padding: 12px 14px;
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--accent);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  font-family: var(--body);
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+button.primary {
+  background: var(--accent);
+  color: #1a1408;
+}
+
+button.primary:hover {
+  filter: brightness(1.05);
+}
+
+button.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+button.ghost:hover {
+  border-color: var(--muted);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.queue-status {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.queue-status h2 {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
+  font-weight: 400;
+}
+
+.countdown {
+  font-family: var(--display);
+  font-size: 3rem;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  margin: 4px 0 12px;
+}
+
+.player-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.player-list li {
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+
+.hint {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 24px;
+}
+
+.hud-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.hud-meta {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 10px 14px;
+  backdrop-filter: blur(8px);
+}
+
+.hud-meta .hole {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.hud-meta .sub {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+.hud-meta .club {
+  font-family: var(--display);
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.club-panel {
+  text-align: right;
+}
+
+.hud-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+}
+
+.power-wrap {
+  width: min(320px, 70vw);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.power-wrap.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.power-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.power-track {
+  height: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.power-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #6dbf7a, var(--accent), var(--danger));
+  transition: width 0.05s linear;
+}
+
+.aim-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+.banner {
+  position: absolute;
+  left: 50%;
+  top: 28%;
+  transform: translate(-50%, -50%) scale(0.96);
+  padding: 18px 36px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(10px);
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  letter-spacing: 0.06em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  white-space: nowrap;
+}
+
+.banner.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.scoreboard {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(6, 10, 8, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.scoreboard-card {
+  width: min(420px, calc(100vw - 32px));
+  padding: 28px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.scoreboard-card h2 {
+  font-family: var(--display);
+  font-size: 2.4rem;
+  letter-spacing: 0.05em;
+  margin: 0 0 6px;
+  font-weight: 400;
+}
+
+.scoreboard-card .par {
+  color: var(--muted);
+  margin: 0 0 18px;
+}
+
+.score-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.score-row .name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.hidden {
+  display: none !important;
+}

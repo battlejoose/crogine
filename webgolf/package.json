@@ -1,0 +1,22 @@
+{
+  "name": "webgolf",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cinematic 1-hole multiplayer golf — Three.js client + Node server",
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/generate-placeholders.mjs",
+    "assets": "node scripts/generate-placeholders.mjs",
+    "dev": "concurrently -n server,client -c cyan,magenta \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w shared && npm run build -w client && npm run build -w server",
+    "start": "npm run start -w server",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
